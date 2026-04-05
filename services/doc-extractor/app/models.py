@@ -31,7 +31,6 @@ class DocumentMeta(BaseModel):
     processed_on: date
     mime_type: str
     pages: Optional[int]
-    sha256: Optional[str]
     version: str
 
 

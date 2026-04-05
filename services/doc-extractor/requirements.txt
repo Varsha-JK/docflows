@@ -2,3 +2,7 @@ fastapi
 uvicorn[standard]
 python-multipart
 docling
+psycopg2-binary
+httpx
+pytest
+

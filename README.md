@@ -1,13 +1,32 @@
 # docflow
 
-A production-style document ingestion pipeline built around a reusable,
-independent document extraction service, designed for downstream RAG systems.
+A production-style document ingestion pipeline built around a reusable, independent document extraction service, designed for downstream RAG systems.
 
-## Extractor Service (Independent and Reusable)
+It focuses on:
+
+- Structured extraction of PDF documents
+- Clean API contracts between services
+- Deterministic batch processing
+- RAG-ready structured outputs
+
+## Document Extractor Service (Independent and Reusable)
 
 ### Purpose:
 
-Convert an input PDF into structured, normalized content for downstream systems (RAG, search, etc).
+A FastAPI-based microservice that:
+
+- Accepts PDF uploads
+- Extracts text and structural metadata
+- Generates SHA256-based document identity
+- Returns a strictly validated response schema
+
+The response includes:
+
+- Document metadata
+- Extraction metadata
+- Structured content sections
+
+This service is reusable and independent of any specific pipeline.
 
 ### API
 
@@ -33,3 +52,14 @@ Convert an input PDF into structured, normalized content for downstream systems 
     - headings
     - page_no
     - text
+
+## Ingestion Pipeline
+
+A lightweight batch runner that:
+
+- Iterates over local PDF files
+- Calls the extraction service
+- Stores structured JSON outputs
+- Uses SHA-based idempotency to prevent reprocessing
+
+The pipeline is deterministic and safe to rerun.

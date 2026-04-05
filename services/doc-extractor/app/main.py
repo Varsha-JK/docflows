@@ -33,7 +33,6 @@ async def extract(file: UploadFile = File(...)) -> Dict[str, Any]:
         converter = DocumentConverter()
         doc_content = converter.convert(tmp_path).document
 
-    sha256 = hashlib.sha256(pdf_bytes).hexdigest()
     file_version = "1.0"
 
     # STUB response (no Docling yet). This matches your Output Contract (v0).
@@ -43,7 +42,6 @@ async def extract(file: UploadFile = File(...)) -> Dict[str, Any]:
             "processed_on": date.today(),
             "mime_type": file.content_type,
             "pages": None,
-            "sha256": sha256,
             "version": file_version,
         },
         "extraction_metadata": {
@@ -57,3 +55,6 @@ async def extract(file: UploadFile = File(...)) -> Dict[str, Any]:
             "sections": [],  # later: [{path, heading, level, page_start, page_end, text}, ...]
         },
     }
+
+
+# uvicorn services.doc-extractor.app.main:app --reload --port 8000
