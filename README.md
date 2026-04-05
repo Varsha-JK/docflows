@@ -4,10 +4,59 @@ A production-style document ingestion pipeline built around a reusable, independ
 
 It focuses on:
 
-- Structured extraction of PDF documents
 - Clean API contracts between services
 - Deterministic batch processing
 - RAG-ready structured outputs
+
+## Key Requirements
+
+### 1. Functional
+
+- Upload or fetch FDA PDFs
+- Structured extraction of PDF documents
+- Store processed data
+- Detect Document Changes (Versioning)
+
+### 2. Non-Functional
+
+- Scalable (handle many documents)
+- Idempotent (don't reprocess same file)
+- Reliable (handle failures gracefully)
+- Consistent registry and version tracking
+- Support retries
+
+## Entities/Tables
+
+1. Document
+   - id (PK)
+   - sha (unique)
+   - filename
+   - source
+   - created_at
+
+2. Document_versions
+   - id
+   - doc_id (FK)
+   - version_number
+   - sha256
+   - created_at
+
+3. Extracted
+   - id
+   - doc_id (FK)
+   - version_id (FK)
+   - content
+   - sections
+   - created_at
+
+4. Records_processed
+   - id (PK)
+   - doc_id (FK)
+   - version_id (FK)
+   - status (pending / processed / failed)
+   - warnings
+   - processed_at
+   - created_at
 
 ## Document Extractor Service (Independent and Reusable)
 
@@ -63,3 +112,14 @@ A lightweight batch runner that:
 - Uses SHA-based idempotency to prevent reprocessing
 
 The pipeline is deterministic and safe to rerun.
+
+## Registry
+
+A logical component that manages document state, idempotency, and versioning
+
+- The database is the underlying storage layer.
+- The registry encapsulates business logic and interacts with the database, allowing the rest of the system to remain decoupled from storage details.
+
+## High Level Design
+
+![alt text](image.png)
